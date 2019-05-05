@@ -24,10 +24,11 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: false,
   productionSourceMap: false,
   devServer: {
     port: port,
+    hotOnly: true, // 热更新
     open: true,
     overlay: {
       warnings: false,
@@ -41,6 +42,14 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      '/apolloApi': {
+        target: 'http://47.101.217.119/graphql.php',
+        // secure: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/apolloApi': ''
         }
       }
     },
@@ -91,7 +100,7 @@ module.exports = {
     config
     // https://webpack.js.org/configuration/devtool/#development
       .when(process.env.NODE_ENV === 'development',
-        config => config.devtool('cheap-source-map')
+        /*config => config.devtool('cheap-source-map')*/
       )
 
     config

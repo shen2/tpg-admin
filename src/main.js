@@ -4,7 +4,6 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
 
@@ -14,6 +13,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import apolloProvider from './utils/apolloRequest'
 
 /**
  * If you don't want to use mock-server
@@ -25,7 +25,7 @@ import '@/permission' // permission control
  */
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
@@ -33,5 +33,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  apolloProvider,
   render: h => h(App)
 })
