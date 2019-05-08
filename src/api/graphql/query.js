@@ -10,6 +10,7 @@ const query = {
           categoryList{
             id
             name
+            slug
           }
         }
       }

@@ -10,6 +10,15 @@ const mutation={
     }
     ${fragments.post.value}
   `,
+
+  postSetCategories:gql`
+    mutation postSetCategories($postId:ObjectId!,$categories:[ObjectId]!){
+      postSetCategories(postId:$postId,categories:$categories){
+          ...${fragments.post.name}
+      }
+    }
+    ${fragments.post.value}
+  `,
 };
 
 export default mutation;

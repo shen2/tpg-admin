@@ -44,8 +44,21 @@
         :center="true">
       </el-alert>
     </section>
+
     <el-dialog :visible.sync="bigImageDialog">
       <img width="100%" :src="bigImageUrl" alt="">
+    </el-dialog>
+
+    <el-dialog width="30%" :visible.sync="pushPending.dialog" title="推送到分类" custom-class="post-push-dialog">
+      <el-tag size="small" v-for="(item,index) in category" :type="pushPending.categoryId===item.id?'success':'info'"
+              :key="index" @click.stop="pushPending.categoryId=item.id;pushPending.categoryName=item.value">{{item.value}}
+      </el-tag>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="pushPending.dialog = false">取消</el-button>
+        <el-button size="small" type="primary" @click.stop="pushPost">确定</el-button>
+      </div>
+
     </el-dialog>
   </div>
 </template>
@@ -72,7 +85,13 @@
         },
         postList: [],
         bigImageUrl: '',
-        bigImageDialog: false
+        bigImageDialog: false,
+        pushPending: {
+          postId: '',
+          dialog: false,
+          categoryId: '',
+          categoryName:''
+        }
       }
     },
     props: {},
@@ -92,7 +111,11 @@
               if (response.data.site.categoryList) {
                 tagsList = response.data.site.categoryList
                 for (let item of tagsList) {
-                  this.category.push({ value: item.name, label: item.name })
+                  if (item.slug === 'all') {
+                    this.pushPending.categoryId = item.id
+                    this.pushPending.categoryName=item.name;
+                  }
+                  this.category.push({ value: item.name, label: item.name, id: item.id })
                 }
               }
             })
@@ -161,6 +184,8 @@
        * @param state 状态
        */
       postModerate(post_id, index, state) {
+        let that
+        that = this
         this.$apollo.mutate({
           mutation: gqlMutation.postCensor,
           variables: {
@@ -174,12 +199,48 @@
               this.postList[index].status = res.data.postCensor.status
               if (this.postList[index].censoring === false) {
                 this.$message.success('审核已拒绝')
+                return false
               }
-              else {
-                this.$message.success('审核已通过')
-              }
+              this.$message({
+                message: '审核已通过',
+                type: 'success',
+                duration: 2000,
+                onClose: () => {
+                  that.pushPending.dialog = true
+                  that.pushPending.postId = post_id
+                }
+              })
 
             }
+          })
+          .catch((error) => {
+
+          })
+      },
+
+      //推送
+      pushPost() {
+        let that;
+        that=this;
+        this.$apollo.mutate({
+          mutation: gqlMutation.postSetCategories,
+          variables: {
+            postId: this.pushPending.postId,
+            categories: [this.pushPending.categoryId]
+          }
+        })
+          .then((data, errors) => {
+            if (errors) {
+              return false
+            }
+            this.$message({
+              message:`推送到${this.pushPending.categoryName}分类成功`,
+              type:'success',
+              duration:1000,
+              onClose:()=>{
+                that.pushPending.dialog=false;
+              }
+            });
           })
           .catch((error) => {
 
@@ -274,6 +335,12 @@
             margin-right: 30px;
           }
         }
+      }
+    }
+    .post-push-dialog {
+      .el-tag {
+        cursor: pointer;
+        margin-right: 10px;
       }
     }
   }
