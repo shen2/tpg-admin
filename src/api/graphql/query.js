@@ -37,6 +37,23 @@ const query = {
        }
      }
    `,
+  comments:gql`
+    query post{
+      post(id:"5cd16b1fe9cff83bf4552901"){
+        commentList(offset:0){
+          id
+          status
+          content
+          createdAt
+          author{
+            id
+            name
+            avatar
+          }
+        }
+      }
+    }
+  `,
 }
 
 export default query

@@ -212,6 +212,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/comments',
+    component: Layout,
+    redirect: '/comments/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/comments/index'),
+        name: 'users',
+        meta: {title: '评论管理', icon: 'comment-manage', noCache: true}
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ];
 

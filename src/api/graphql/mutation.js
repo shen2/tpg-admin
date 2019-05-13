@@ -19,6 +19,11 @@ const mutation={
     }
     ${fragments.post.value}
   `,
+  commentDelete:gql`
+    mutation commentDelete($commentId:ObjectId!) {
+                commentDelete(commentId:$commentId)
+              }
+  `,
 };
 
 export default mutation;
