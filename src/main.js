@@ -34,5 +34,8 @@ new Vue({
   router,
   store,
   apolloProvider,
+  mounted(){
+    this.$store.dispatch('initialize');
+  },
   render: h => h(App)
 })

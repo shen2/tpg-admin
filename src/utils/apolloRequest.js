@@ -18,7 +18,7 @@ const httpLink = createHttpLink({
 const middlewareLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
-      //'Authorization': store.state.user.user_token 动态获取token
+      'Authorization': 'Bearer ' + store.state.jwt
     }
   });
 

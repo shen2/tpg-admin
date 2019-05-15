@@ -54,6 +54,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import gql from 'graphql-tag'
 
 export default {
   name: 'Login',
@@ -106,20 +107,42 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.$apollo
+        .query({
+          query: gql`
+              query ($unionid:String!){
+                jwt(unionid:$unionid)
+              }
+            `,
+          variables: {
+            unionid: 'seu382sjkd'
+          }
+        })
+        .then(({data, errors}) => {
+          if (data) {
+            window.localStorage.setItem('jwt', data.jwt);
+            this.$refs.loginForm.validate(valid => {
+              if (valid) {
+                this.loading = true
+                this.$store.dispatch('user/login', this.loginForm).then(() => {
+                  this.$router.push({ path: this.redirect || '/' })
+                  this.loading = false
+                }).catch(() => {
+                  this.loading = false
+                })
+              } else {
+                console.log('error submit!!')
+                return false
+              }
+            })
+          }
+          else {
+            alert('登录失败');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 }

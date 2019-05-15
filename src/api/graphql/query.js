@@ -2,6 +2,26 @@ import fragments  from './fragments'
 import gql from 'graphql-tag'
 
 const query = {
+  initialize:gql`
+  query viewer{
+    viewer{
+      id
+      slug
+      name
+      avatar
+      mobile
+      memberLevel
+      reviewCategories
+    }
+    site(id:12306){
+      id
+      categoryList {
+        id
+        name
+        slug
+      }
+    }
+  }`,
   site:gql`
     query site($id:Int!){
       site(id:$id){
