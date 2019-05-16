@@ -39,11 +39,6 @@ const store = new Vuex.Store({
         .then(({data,errors}) => {
           context.commit('setViewer', data.viewer);
           window.localStorage.setItem('viewer', JSON.stringify(data.viewer));
-
-          context.commit('setSite', data.site);
-          if (data.site.categoryList) {
-            context.commit('setCategories', data.site.categoryList);
-          }
         })
         .catch(error=>{
           console.log('getUserInfoError'+error);

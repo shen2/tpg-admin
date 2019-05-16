@@ -16,6 +16,11 @@ const fragments = {
           id
           url
           status
+        }
+        author{
+          id
+          slug
+          name
         } 
       } 
     `

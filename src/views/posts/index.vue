@@ -29,6 +29,15 @@
           <el-tag v-if="post.censoring!==null" :type="post.censoring?'warning':'danger'">
             {{post.censoring?'审核中':'审核拒绝'}}
           </el-tag>
+          <el-tag v-for="(item,index) in post.categories" :key="index">
+            {{item}}
+          </el-tag>
+          <el-tag v-for="(item,index) in post.tag" :key="index">
+            {{item}}
+          </el-tag>
+        </div>
+        <div class="author">
+          作者：<a :href="`https://www.baidu.com?slug=${post.author.slug}`">{{post.author.name}}</a>
         </div>
         <div class="review">
           <el-button type="primary" @click.stop="postModerate(post.id,index,'accept')">通过</el-button>
@@ -296,7 +305,7 @@
       .postItem {
         position: relative;
         width: 292.5px;
-        height: 300px;
+        min-height: 300px;
         flex: 0 0 292.5px;
         margin: 0 10px 20px 0;
         cursor: pointer;
@@ -319,12 +328,17 @@
           }
         }
         .postState {
-          height: 24px;
+          min-height: 24px;
           margin: 3px 0;
           .el-tag {
             height: 24px;
             line-height: 24px;
           }
+        }
+        .author{
+          font-size: 12px;
+          margin: 10px 0;
+          color: #409EFF;
         }
         .review {
           height: 30px;
